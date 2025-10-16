@@ -49,7 +49,7 @@ export default function Home() {
                 Botão HARD Gigante
               </h2>
               <p className="text-gray-600">
-                Clique e veja a magia acontecer! 🎉
+                Da uma testada ai :)
               </p>
             </div>
             <HardButton />

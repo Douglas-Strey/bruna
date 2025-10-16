@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import BrunaPhoto from './BrunaPhoto';
-import { speakHardPhrase } from '@/lib/textToSpeech';
+import { speakHardPhrase, prepareTTS } from '@/lib/textToSpeech';
 
 export default function HardButton() {
   const [clickCount, setClickCount] = useState(0);
@@ -12,6 +12,8 @@ export default function HardButton() {
   const [animationType, setAnimationType] = useState<'shake' | 'zoom' | 'fade' | 'bounce'>('shake');
 
   const handleClick = () => {
+    // Ensure TTS is prepared after first user gesture
+    prepareTTS();
     setClickCount(prev => prev + 1);
     
     // Trigger confetti
@@ -89,7 +91,7 @@ export default function HardButton() {
               animate={{ scale: 1 }}
               className="text-xl font-bold text-purple-600 mt-2"
             >
-              🎉 MILESTONE! 🎉
+              🎉 VAMOOOOOOO! 🎉
             </motion.p>
           )}
         </motion.div>

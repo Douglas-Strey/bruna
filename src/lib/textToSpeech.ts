@@ -54,6 +54,14 @@ const initializeSpeech = async (preferredVoice?: SpeechSynthesisVoice) => {
   }
 };
 
+// Expose a prep function to be invoked on first user gesture
+export const prepareTTS = async () => {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  const voices = await loadVoices();
+  const preferred = voices.find(v => /pt-BR/i.test(v.lang)) || voices.find(v => /^pt/i.test(v.lang));
+  await initializeSpeech(preferred);
+};
+
 export const speakText = async (text: string, rate: number = 0.92, pitch: number = 1.0) => {
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     const synth = window.speechSynthesis;
@@ -83,6 +91,13 @@ export const speakText = async (text: string, rate: number = 0.92, pitch: number
       const timeout = setTimeout(() => {
         if (!synth.speaking && attempt < 2) {
           trySpeak(attempt + 1);
+        } else if (!synth.speaking && attempt >= 2) {
+          // Last-resort fallback: speak without custom voice immediately
+          const fallback = new SpeechSynthesisUtterance(text);
+          fallback.volume = 1;
+          fallback.rate = utterance.rate;
+          fallback.pitch = utterance.pitch;
+          synth.speak(fallback);
         }
       }, 400);
 

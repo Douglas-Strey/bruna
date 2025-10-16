@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import BrunaPhoto from './BrunaPhoto';
-import { speakText } from '@/lib/textToSpeech';
+import { speakText, prepareTTS } from '@/lib/textToSpeech';
 
 export default function PhraseGenerator() {
   const [inputText, setInputText] = useState('');
@@ -13,6 +13,9 @@ export default function PhraseGenerator() {
 
   const generateResponse = () => {
     if (!inputText.trim()) return;
+
+    // Prepare TTS on user interaction
+    prepareTTS();
 
     setIsGenerating(true);
     setShowPhoto(false);
