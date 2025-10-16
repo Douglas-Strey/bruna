@@ -97,9 +97,17 @@ export const speakText = async (text: string, rate: number = 0.92, pitch: number
 
     // Retry logic: some browsers ignore the first speak after cancel/getVoices
     const trySpeak = (attempt: number) => {
-      // Cancel anything queued, then speak
-      synth.cancel();
-      synth.speak(utterance);
+      // Avoid over-canceling which can trigger 'canceled' errors
+      if (synth.speaking || synth.pending) synth.cancel();
+
+      // Chrome sometimes starts paused; ensure resume before/while speaking
+      if (synth.paused) synth.resume();
+      const resumeTicker = setInterval(() => {
+        if (synth.paused) synth.resume();
+      }, 200);
+
+      // Speak on next tick to allow resume/cancel to settle
+      setTimeout(() => synth.speak(utterance), 0);
 
       // If it didn't start within 400ms, retry up to 2 times
       const timeout = setTimeout(() => {
@@ -116,10 +124,16 @@ export const speakText = async (text: string, rate: number = 0.92, pitch: number
         }
       }, 400);
 
-      utterance.onstart = () => clearTimeout(timeout);
-      utterance.onend = () => clearTimeout(timeout);
+      utterance.onstart = () => {
+        clearTimeout(timeout);
+        clearInterval(resumeTicker);
+      };
+      utterance.onend = () => {
+        clearTimeout(timeout);
+        clearInterval(resumeTicker);
+      };
       utterance.onerror = (e) => {
-        // eslint-disable-next-line no-console
+         
         console.log('TTS error', e.error);
       };
     };
