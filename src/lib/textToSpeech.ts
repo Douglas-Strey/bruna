@@ -47,19 +47,41 @@ const phraseToSound = (phrase: string) => {
   const lowerPhrase = phrase.toLowerCase();
   
   if (lowerPhrase.includes('hard')) {
-    playBeep(220, 300);
-    setTimeout(() => playBeep(330, 200), 100);
-    setTimeout(() => playBeep(440, 150), 200);
+    // Sequência mais dramática para "HARD"
+    playBeep(165, 200); // H
+    setTimeout(() => playBeep(220, 200), 150); // A
+    setTimeout(() => playBeep(330, 200), 300); // R
+    setTimeout(() => playBeep(440, 300), 450); // D (mais longo)
   } else if (lowerPhrase.includes('sim')) {
-    playBeep(330, 150);
-    setTimeout(() => playBeep(440, 150), 100);
-    setTimeout(() => playBeep(550, 200), 200);
+    // Sequência ascendente alegre para "SIM"
+    playBeep(330, 150); // S
+    setTimeout(() => playBeep(440, 150), 100); // I
+    setTimeout(() => playBeep(550, 200), 200); // M (mais longo)
+    setTimeout(() => playBeep(660, 100), 350); // Exclamação
   } else if (lowerPhrase.includes('não')) {
-    playBeep(550, 150);
-    setTimeout(() => playBeep(440, 150), 100);
-    setTimeout(() => playBeep(330, 200), 200);
+    // Sequência descendente para "NÃO"
+    playBeep(550, 150); // N
+    setTimeout(() => playBeep(440, 150), 100); // Ã
+    setTimeout(() => playBeep(330, 200), 200); // O (mais longo)
+  } else if (lowerPhrase.includes('amigo')) {
+    // Sequência especial para "AMIGO"
+    playBeep(330, 100); // A
+    setTimeout(() => playBeep(440, 100), 80); // M
+    setTimeout(() => playBeep(550, 100), 160); // I
+    setTimeout(() => playBeep(440, 100), 240); // G
+    setTimeout(() => playBeep(330, 150), 320); // O
+  } else if (lowerPhrase.includes('demais')) {
+    // Sequência para "DEMAIS"
+    playBeep(220, 100); // D
+    setTimeout(() => playBeep(330, 100), 80); // E
+    setTimeout(() => playBeep(440, 100), 160); // M
+    setTimeout(() => playBeep(330, 100), 240); // A
+    setTimeout(() => playBeep(440, 100), 320); // I
+    setTimeout(() => playBeep(550, 150), 400); // S
   } else {
+    // Som padrão para outras frases
     playBeep(440, 200);
+    setTimeout(() => playBeep(550, 150), 150);
   }
 };
 
