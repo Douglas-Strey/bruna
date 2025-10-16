@@ -66,16 +66,31 @@ export const speakText = async (text: string, rate: number = 0.92, pitch: number
 
     await initializeSpeech(local);
 
-    // Cancel any ongoing speech
-    synth.cancel();
-
+    // Build utterance
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = rate;
-    utterance.pitch = pitch;
+    utterance.rate = Math.min(1.2, Math.max(0.6, rate));
+    utterance.pitch = Math.min(2, Math.max(0.5, pitch));
     utterance.volume = 0.95;
     if (local) utterance.voice = local;
 
-    synth.speak(utterance);
+    // Retry logic: some browsers ignore the first speak after cancel/getVoices
+    const trySpeak = (attempt: number) => {
+      // Cancel anything queued, then speak
+      synth.cancel();
+      synth.speak(utterance);
+
+      // If it didn't start within 400ms, retry up to 2 times
+      const timeout = setTimeout(() => {
+        if (!synth.speaking && attempt < 2) {
+          trySpeak(attempt + 1);
+        }
+      }, 400);
+
+      utterance.onstart = () => clearTimeout(timeout);
+      utterance.onend = () => clearTimeout(timeout);
+    };
+
+    trySpeak(0);
   }
 };
 
