@@ -29,7 +29,7 @@ export default function HardButton() {
     setShowPhoto(true);
 
     // Speak hard phrase
-    speakHardPhrase('');
+    speakHardPhrase();
 
     // Hide photo after animation
     setTimeout(() => {

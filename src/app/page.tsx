@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import HardButton from '@/components/HardButton';
 import PhraseGenerator from '@/components/PhraseGenerator';
 

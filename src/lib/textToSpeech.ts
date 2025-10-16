@@ -38,7 +38,7 @@ export const speakText = (text: string, rate: number = 0.8, pitch: number = 1.2)
   }
 };
 
-export const speakHardPhrase = (phrase: string) => {
+export const speakHardPhrase = () => {
   const hardPhrases = [
     "HAAAARRRRD!",
     "HARD QUE SIM!",
@@ -46,7 +46,8 @@ export const speakHardPhrase = (phrase: string) => {
     "HARD DEMAIS!",
     "HARD PRA CARAMBA!",
     "HARD QUE SIM, MANO!",
-    "HARD QUE SIM, GENTE!"
+    "HARD QUE SIM, GENTE!",
+    "HARD MANO!?!?!"
   ];
   
   const randomPhrase = hardPhrases[Math.floor(Math.random() * hardPhrases.length)];

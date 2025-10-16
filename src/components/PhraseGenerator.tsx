@@ -115,7 +115,7 @@ export default function PhraseGenerator() {
         >
           <div className="bg-gradient-to-r from-pink-100 to-purple-100 p-6 rounded-lg border-2 border-pink-200">
             <p className="text-xl font-bold text-gray-800 mb-2">
-              "{inputText}"
+              &quot;{inputText}&quot;
             </p>
             <p className="text-2xl font-bold text-pink-600">
               {response}
