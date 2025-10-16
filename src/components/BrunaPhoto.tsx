@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, easeInOut, easeOut } from 'framer-motion';
 import Image from 'next/image';
 
 interface BrunaPhotoProps {
@@ -26,7 +26,7 @@ export default function BrunaPhoto({
       animate: { 
         x: [-10, 10, -10, 10, 0],
         rotate: [-5, 5, -5, 5, 0],
-        transition: { duration: 0.5, ease: "easeInOut" }
+        transition: { duration: 0.5, ease: easeInOut }
       }
     },
     zoom: {
@@ -34,7 +34,7 @@ export default function BrunaPhoto({
       animate: { 
         scale: [0.8, 1.2, 1],
         opacity: [0, 1, 1],
-        transition: { duration: 0.6, ease: "easeOut" }
+        transition: { duration: 0.6, ease: easeOut }
       }
     },
     fade: {
@@ -42,14 +42,14 @@ export default function BrunaPhoto({
       animate: { 
         opacity: [0, 1],
         y: [20, 0],
-        transition: { duration: 0.5, ease: "easeOut" }
+        transition: { duration: 0.5, ease: easeOut }
       }
     },
     bounce: {
       initial: { y: 0 },
       animate: { 
         y: [-20, 0, -10, 0],
-        transition: { duration: 0.8, ease: "easeOut" }
+        transition: { duration: 0.8, ease: easeOut }
       }
     }
   };
