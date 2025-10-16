@@ -2,6 +2,38 @@
 let speechInitialized = false;
 let voicesReadyPromise: Promise<SpeechSynthesisVoice[]> | null = null;
 
+// WebAudio unlock: play a very short beep to open audio channel on Chromium-based browsers
+let sharedAudioCtx: AudioContext | null = null;
+const getAudioContext = (): AudioContext | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    // @ts-expect-error WebKit prefix is not in TS lib
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    if (!sharedAudioCtx) sharedAudioCtx = new Ctx();
+    return sharedAudioCtx;
+  } catch {
+    return null;
+  }
+};
+
+export const unlockAudio = async () => {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  if (ctx.state === 'suspended') {
+    await ctx.resume().catch(() => {});
+  }
+  // Beep 50ms at low gain to unlock channel
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  gain.gain.value = 0.0001;
+  osc.frequency.value = 440;
+  osc.connect(gain).connect(ctx.destination);
+  const now = ctx.currentTime;
+  osc.start(now);
+  osc.stop(now + 0.05);
+};
+
 const loadVoices = (): Promise<SpeechSynthesisVoice[]> => {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
     return Promise.resolve([]);
@@ -57,6 +89,7 @@ const initializeSpeech = async (preferredVoice?: SpeechSynthesisVoice) => {
 // Expose a prep function to be invoked on first user gesture
 export const prepareTTS = async () => {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  await unlockAudio();
   const voices = await loadVoices();
   const preferred = voices.find(v => /pt-BR/i.test(v.lang)) || voices.find(v => /^pt/i.test(v.lang));
   await initializeSpeech(preferred);
@@ -78,6 +111,7 @@ export const testSpeak = async () => {
 export const speakText = async (text: string, rate: number = 0.92, pitch: number = 1.0) => {
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     const synth = window.speechSynthesis;
+    await unlockAudio();
     const voices = await loadVoices();
 
     // Prefer pt-BR, then any pt, then any local/default
