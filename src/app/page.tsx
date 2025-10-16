@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import HardButton from '@/components/HardButton';
 import PhraseGenerator from '@/components/PhraseGenerator';
-import { prepareTTS, getTTSStatus, testSpeak } from '@/lib/textToSpeech';
+// Removido: botão extra de ativar voz (não era necessário na versão que funcionava)
 
 export default function Home() {
   return (
@@ -36,27 +36,7 @@ export default function Home() {
           </motion.p>
         </div>
 
-        {/* Audio Prep Banner */}
-        <div className="max-w-2xl mx-auto mb-6">
-          <div className="flex items-center justify-between gap-4 bg-white/70 border border-pink-200 rounded-xl px-4 py-3">
-            <div className="text-sm text-gray-700">
-              Se não ouvir a voz, ative o áudio aqui primeiro.
-            </div>
-            <button
-              onClick={async () => {
-                const before = getTTSStatus();
-                console.log('TTS before', before);
-                await prepareTTS();
-                await testSpeak();
-                const after = getTTSStatus();
-                console.log('TTS after', after);
-              }}
-              className="px-3 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:from-pink-600 hover:to-purple-700"
-            >
-              Ativar Voz
-            </button>
-          </div>
-        </div>
+        {/* Audio Prep Banner removido */}
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">

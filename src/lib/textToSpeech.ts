@@ -32,8 +32,6 @@ export const testSpeak = async () => {
 export const speakText = (text: string, rate: number = 0.8, pitch: number = 1.2) => {
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     initializeSpeech();
-    // Cancela o que estiver falando e fala imediatamente
-    window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = rate;
