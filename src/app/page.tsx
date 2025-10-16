@@ -24,7 +24,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl text-gray-600 max-w-2xl mx-auto"
           >
-            Celebre a frase icônica da Bruna! Clique no botão HARD ou teste o gerador de frases.
+            Tenta ai! Clique no botão HARD ou teste o gerador de frases.
           </motion.p>
         </div>
 

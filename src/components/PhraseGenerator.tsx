@@ -19,7 +19,7 @@ export default function PhraseGenerator() {
 
     // Simulate thinking time
     setTimeout(() => {
-      const hardResponses = [
+      const responses = [
         "HARD QUE SIM, AMIGO!",
         "HARD QUE SIM!",
         "HARD DEMAIS!",
@@ -29,21 +29,9 @@ export default function PhraseGenerator() {
         "HARD QUE SIM, PESSOAL!"
       ];
 
-      const softResponses = [
-        "SOFT QUE SIM, AMIGO!",
-        "SOFT QUE SIM!",
-        "SOFT DEMAIS!",
-        "SOFT PRA CARAMBA!",
-        "SOFT QUE SIM, GALERA!",
-        "SOFT QUE SIM, MANO!",
-        "SOFT QUE SIM, PESSOAL!"
-      ];
-
       const negativeResponses = [
         "HARD QUE NÃO!",
-        "SOFT QUE NÃO!",
-        "HARD QUE NÃO, AMIGO!",
-        "SOFT QUE NÃO, AMIGO!"
+        "HARD QUE NÃO, AMIGO!"
       ];
 
       // Simple logic: if input contains negative words, respond with negative
@@ -52,14 +40,9 @@ export default function PhraseGenerator() {
         inputText.toLowerCase().includes(word)
       );
 
-      let selectedResponse;
-      if (hasNegative) {
-        selectedResponse = negativeResponses[Math.floor(Math.random() * negativeResponses.length)];
-      } else {
-        // Randomly choose between hard and soft responses
-        const allPositiveResponses = [...hardResponses, ...softResponses];
-        selectedResponse = allPositiveResponses[Math.floor(Math.random() * allPositiveResponses.length)];
-      }
+      const selectedResponse = hasNegative 
+        ? negativeResponses[Math.floor(Math.random() * negativeResponses.length)]
+        : responses[Math.floor(Math.random() * responses.length)];
 
       setResponse(selectedResponse);
       setShowPhoto(true);
@@ -85,7 +68,7 @@ export default function PhraseGenerator() {
     <div className="w-full max-w-md mx-auto space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Gerador de Frases HARD & SOFT
+          Gerador de Frases HARD
         </h2>
         <p className="text-gray-600">
           Digite algo e veja a resposta da Bruna!

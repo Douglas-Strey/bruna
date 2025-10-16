@@ -1,5 +1,21 @@
+// Initialize speech synthesis to avoid robotic voice on first use
+let speechInitialized = false;
+
+const initializeSpeech = () => {
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window && !speechInitialized) {
+    // Create a silent utterance to initialize the speech engine
+    const silentUtterance = new SpeechSynthesisUtterance('');
+    silentUtterance.volume = 0;
+    window.speechSynthesis.speak(silentUtterance);
+    speechInitialized = true;
+  }
+};
+
 export const speakText = (text: string, rate: number = 0.8, pitch: number = 1.2) => {
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    // Initialize speech synthesis if not done yet
+    initializeSpeech();
+    
     // Cancel any ongoing speech
     window.speechSynthesis.cancel();
     
@@ -33,25 +49,6 @@ export const speakHardPhrase = (phrase: string) => {
     "HARD QUE SIM, PESSOAL!"
   ];
   
-  const softPhrases = [
-    "SOFT QUE SIM!",
-    "SOFT QUE SIM, AMIGO!",
-    "SOFT DEMAIS!",
-    "SOFT PRA CARAMBA!",
-    "SOFT QUE SIM, GALERA!",
-    "SOFT QUE SIM, MANO!",
-    "SOFT QUE SIM, PESSOAL!"
-  ];
-  
-  const negativePhrases = [
-    "HARD QUE NÃO!",
-    "SOFT QUE NÃO!",
-    "HARD QUE NÃO, AMIGO!",
-    "SOFT QUE NÃO, AMIGO!"
-  ];
-  
-  // Randomly choose between hard and soft phrases
-  const allPhrases = [...hardPhrases, ...softPhrases];
-  const randomPhrase = allPhrases[Math.floor(Math.random() * allPhrases.length)];
+  const randomPhrase = hardPhrases[Math.floor(Math.random() * hardPhrases.length)];
   speakText(randomPhrase, 0.9, 1.3);
 };
