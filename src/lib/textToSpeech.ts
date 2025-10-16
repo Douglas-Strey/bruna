@@ -1,98 +1,19 @@
-// Robust voice loading and warm-up to avoid robotic first utterance
+// Versão simplificada (a que estava funcionando): usa getVoices diretamente e fala
+// sem aquecimentos complexos. Mantemos algumas funções utilitárias como no-ops
+// para não quebrar imports existentes.
+
 let speechInitialized = false;
-let voicesReadyPromise: Promise<SpeechSynthesisVoice[]> | null = null;
 
-// WebAudio unlock: play a very short beep to open audio channel on Chromium-based browsers
-let sharedAudioCtx: AudioContext | null = null;
-const getAudioContext = (): AudioContext | null => {
-  if (typeof window === 'undefined') return null;
-  try {
-    // @ts-expect-error WebKit prefix is not in TS lib
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!Ctx) return null;
-    if (!sharedAudioCtx) sharedAudioCtx = new Ctx();
-    return sharedAudioCtx;
-  } catch {
-    return null;
-  }
-};
-
-export const unlockAudio = async () => {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-  if (ctx.state === 'suspended') {
-    await ctx.resume().catch(() => {});
-  }
-  // Beep 50ms at low gain to unlock channel
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  gain.gain.value = 0.0001;
-  osc.frequency.value = 440;
-  osc.connect(gain).connect(ctx.destination);
-  const now = ctx.currentTime;
-  osc.start(now);
-  osc.stop(now + 0.05);
-};
-
-const loadVoices = (): Promise<SpeechSynthesisVoice[]> => {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    return Promise.resolve([]);
-  }
-
-  const synth = window.speechSynthesis;
-  const existing = synth.getVoices();
-  if (existing && existing.length > 0) {
-    return Promise.resolve(existing);
-  }
-
-  if (!voicesReadyPromise) {
-    voicesReadyPromise = new Promise((resolve) => {
-      const handle = () => {
-        const v = synth.getVoices();
-        if (v && v.length > 0) {
-          synth.onvoiceschanged = null;
-          resolve(v);
-        }
-      };
-      // Some browsers fire onvoiceschanged asynchronously
-      synth.onvoiceschanged = handle;
-      // Fallback polling in case onvoiceschanged never fires (Safari quirks)
-      const start = Date.now();
-      const timer = setInterval(() => {
-        const v = synth.getVoices();
-        if (v && v.length > 0) {
-          clearInterval(timer);
-          synth.onvoiceschanged = null;
-          resolve(v);
-        } else if (Date.now() - start > 3000) {
-          clearInterval(timer);
-          resolve([]);
-        }
-      }, 150);
-    });
-  }
-  return voicesReadyPromise;
-};
-
-const initializeSpeech = async (preferredVoice?: SpeechSynthesisVoice) => {
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window && !speechInitialized) {
-    const synth = window.speechSynthesis;
-    // Warm-up using the same target voice with zero volume
-    const warmUp = new SpeechSynthesisUtterance('.');
-    warmUp.volume = 0;
-    if (preferredVoice) warmUp.voice = preferredVoice;
-    synth.speak(warmUp);
-    speechInitialized = true;
-  }
+const initializeSpeech = () => {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  if (speechInitialized) return;
+  // Inicia de forma simples (sem utterance silenciosa)
+  speechInitialized = true;
 };
 
 // Expose a prep function to be invoked on first user gesture
 export const prepareTTS = async () => {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-  await unlockAudio();
-  const voices = await loadVoices();
-  const preferred = voices.find(v => /pt-BR/i.test(v.lang)) || voices.find(v => /^pt/i.test(v.lang));
-  await initializeSpeech(preferred);
+  initializeSpeech();
 };
 
 export const getTTSStatus = () => {
@@ -105,89 +26,39 @@ export const getTTSStatus = () => {
 };
 
 export const testSpeak = async () => {
-  await speakText('Hard que sim!', 0.92, 1.0);
+  speakText('Hard que sim!', 0.92, 1.0);
 };
 
-export const speakText = async (text: string, rate: number = 0.92, pitch: number = 1.0) => {
+export const speakText = (text: string, rate: number = 0.8, pitch: number = 1.2) => {
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    const synth = window.speechSynthesis;
-    await unlockAudio();
-    const voices = await loadVoices();
+    initializeSpeech();
+    // Cancela o que estiver falando e fala imediatamente
+    window.speechSynthesis.cancel();
 
-    // Prefer pt-BR, then any pt, then any local/default
-    const brazilian = voices.find(v => /pt-BR/i.test(v.lang));
-    const portuguese = brazilian || voices.find(v => /^pt/i.test(v.lang));
-    const local = portuguese || voices[0];
-
-    await initializeSpeech(local);
-
-    // Build utterance
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = Math.min(1.2, Math.max(0.6, rate));
-    utterance.pitch = Math.min(2, Math.max(0.5, pitch));
-    utterance.volume = 0.95;
-    utterance.lang = 'pt-BR';
-    if (local) utterance.voice = local;
+    utterance.rate = rate;
+    utterance.pitch = pitch;
+    utterance.volume = 0.9;
 
-    // Retry logic: some browsers ignore the first speak after cancel/getVoices
-    const trySpeak = (attempt: number) => {
-      // Avoid over-canceling which can trigger 'canceled' errors
-      if (synth.speaking || synth.pending) synth.cancel();
+    const voices = window.speechSynthesis.getVoices();
+    const brazilianVoice = voices.find(v => /pt-BR/i.test(v.lang)) || voices.find(v => /^pt/i.test(v.lang));
+    if (brazilianVoice) utterance.voice = brazilianVoice;
 
-      // Chrome sometimes starts paused; ensure resume before/while speaking
-      if (synth.paused) synth.resume();
-      const resumeTicker = setInterval(() => {
-        if (synth.paused) synth.resume();
-      }, 200);
-
-      // Speak on next tick to allow resume/cancel to settle
-      setTimeout(() => synth.speak(utterance), 0);
-
-      // If it didn't start within 400ms, retry up to 2 times
-      const timeout = setTimeout(() => {
-        if (!synth.speaking && attempt < 2) {
-          trySpeak(attempt + 1);
-        } else if (!synth.speaking && attempt >= 2) {
-          // Last-resort fallback: speak without custom voice immediately
-          const fallback = new SpeechSynthesisUtterance(text);
-          fallback.volume = 1;
-          fallback.rate = utterance.rate;
-          fallback.pitch = utterance.pitch;
-          fallback.lang = 'pt-BR';
-          synth.speak(fallback);
-        }
-      }, 400);
-
-      utterance.onstart = () => {
-        clearTimeout(timeout);
-        clearInterval(resumeTicker);
-      };
-      utterance.onend = () => {
-        clearTimeout(timeout);
-        clearInterval(resumeTicker);
-      };
-      utterance.onerror = (e) => {
-         
-        console.log('TTS error', e.error);
-      };
-    };
-
-    trySpeak(0);
+    window.speechSynthesis.speak(utterance);
   }
 };
 
 export const speakHardPhrase = () => {
   const hardPhrases = [
-    "HAAAARRRRD!",
-    "HARD QUE SIM!",
-    "HARD QUE SIM, AMIGO!",
-    "HARD DEMAIS!",
-    "HARD PRA CARAMBA!",
-    "HARD QUE SIM, MANO!",
-    "HARD QUE SIM, GENTE!",
-    "HARD MANO!?!?!"
+    'HAAAARRRRD!',
+    'HARD QUE SIM!',
+    'HARD QUE SIM, AMIGO!',
+    'HARD DEMAIS!',
+    'HARD PRA CARAMBA!',
+    'HARD QUE SIM, MANO!',
+    'HARD QUE SIM, GENTE!',
+    'HARD MANO!?!?!'
   ];
-  
   const randomPhrase = hardPhrases[Math.floor(Math.random() * hardPhrases.length)];
   speakText(randomPhrase, 0.9, 1.3);
 };
