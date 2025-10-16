@@ -92,6 +92,7 @@ export const speakText = async (text: string, rate: number = 0.92, pitch: number
     utterance.rate = Math.min(1.2, Math.max(0.6, rate));
     utterance.pitch = Math.min(2, Math.max(0.5, pitch));
     utterance.volume = 0.95;
+    utterance.lang = 'pt-BR';
     if (local) utterance.voice = local;
 
     // Retry logic: some browsers ignore the first speak after cancel/getVoices
@@ -110,12 +111,17 @@ export const speakText = async (text: string, rate: number = 0.92, pitch: number
           fallback.volume = 1;
           fallback.rate = utterance.rate;
           fallback.pitch = utterance.pitch;
+          fallback.lang = 'pt-BR';
           synth.speak(fallback);
         }
       }, 400);
 
       utterance.onstart = () => clearTimeout(timeout);
       utterance.onend = () => clearTimeout(timeout);
+      utterance.onerror = (e) => {
+        // eslint-disable-next-line no-console
+        console.log('TTS error', e.error);
+      };
     };
 
     trySpeak(0);
