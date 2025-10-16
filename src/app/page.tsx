@@ -1,3 +1,5 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import HardButton from '@/components/HardButton';
 import PhraseGenerator from '@/components/PhraseGenerator';
