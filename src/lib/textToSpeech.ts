@@ -62,6 +62,19 @@ export const prepareTTS = async () => {
   await initializeSpeech(preferred);
 };
 
+export const getTTSStatus = () => {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    return { supported: false, voices: 0, speaking: false, pending: false };
+  }
+  const synth = window.speechSynthesis;
+  const voices = synth.getVoices()?.length || 0;
+  return { supported: true, voices, speaking: synth.speaking, pending: synth.pending };
+};
+
+export const testSpeak = async () => {
+  await speakText('Hard que sim!', 0.92, 1.0);
+};
+
 export const speakText = async (text: string, rate: number = 0.92, pitch: number = 1.0) => {
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     const synth = window.speechSynthesis;
