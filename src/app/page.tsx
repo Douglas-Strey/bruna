@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import HardButton from '@/components/HardButton';
 import PhraseGenerator from '@/components/PhraseGenerator';
 
@@ -10,19 +11,36 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-4"
+            className="flex flex-col items-center space-y-4"
           >
-            É HARD OU NÃO É?
-          </motion.h1>
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32">
+              <Image
+                src="/bruna.jpg"
+                alt="Bruna"
+                fill
+                className="rounded-full object-cover shadow-2xl border-4 border-pink-300"
+                priority
+              />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-pink-200/20 to-purple-200/20"></div>
+            </div>
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
+            >
+              HARD
+            </motion.h1>
+          </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4"
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4 mt-6"
           >
             Tenta ai! Clique no botão HARD ou teste o gerador de frases.
           </motion.p>

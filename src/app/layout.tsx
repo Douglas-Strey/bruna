@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Site HARD da Bruna",
+  title: "HARD",
   description: "Celebre a frase icônica da Bruna! Site interativo com botão HARD e gerador de frases.",
 };
 
