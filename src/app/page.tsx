@@ -16,7 +16,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-5xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-4"
           >
-            Site HARD da Bruna
+            É HARD OU NÃO É?
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

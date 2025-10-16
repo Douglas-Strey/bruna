@@ -19,26 +19,47 @@ export default function PhraseGenerator() {
 
     // Simulate thinking time
     setTimeout(() => {
-      const responses = [
+      const hardResponses = [
         "HARD QUE SIM, AMIGO!",
         "HARD QUE SIM!",
         "HARD DEMAIS!",
-        "HARD QUE NÃO!",
         "HARD PRA CARAMBA!",
         "HARD QUE SIM, GALERA!",
         "HARD QUE SIM, MANO!",
         "HARD QUE SIM, PESSOAL!"
       ];
 
-      // Simple logic: if input contains negative words, respond with "HARD QUE NÃO"
+      const softResponses = [
+        "SOFT QUE SIM, AMIGO!",
+        "SOFT QUE SIM!",
+        "SOFT DEMAIS!",
+        "SOFT PRA CARAMBA!",
+        "SOFT QUE SIM, GALERA!",
+        "SOFT QUE SIM, MANO!",
+        "SOFT QUE SIM, PESSOAL!"
+      ];
+
+      const negativeResponses = [
+        "HARD QUE NÃO!",
+        "SOFT QUE NÃO!",
+        "HARD QUE NÃO, AMIGO!",
+        "SOFT QUE NÃO, AMIGO!"
+      ];
+
+      // Simple logic: if input contains negative words, respond with negative
       const negativeWords = ['não', 'nunca', 'jamais', 'impossível', 'difícil', 'problema'];
       const hasNegative = negativeWords.some(word => 
         inputText.toLowerCase().includes(word)
       );
 
-      const selectedResponse = hasNegative 
-        ? "HARD QUE NÃO!"
-        : responses[Math.floor(Math.random() * responses.length)];
+      let selectedResponse;
+      if (hasNegative) {
+        selectedResponse = negativeResponses[Math.floor(Math.random() * negativeResponses.length)];
+      } else {
+        // Randomly choose between hard and soft responses
+        const allPositiveResponses = [...hardResponses, ...softResponses];
+        selectedResponse = allPositiveResponses[Math.floor(Math.random() * allPositiveResponses.length)];
+      }
 
       setResponse(selectedResponse);
       setShowPhoto(true);
@@ -64,7 +85,7 @@ export default function PhraseGenerator() {
     <div className="w-full max-w-md mx-auto space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Gerador de Frases HARD
+          Gerador de Frases HARD & SOFT
         </h2>
         <p className="text-gray-600">
           Digite algo e veja a resposta da Bruna!

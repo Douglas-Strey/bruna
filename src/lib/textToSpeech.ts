@@ -28,10 +28,30 @@ export const speakHardPhrase = (phrase: string) => {
     "HARD QUE SIM, AMIGO!",
     "HARD DEMAIS!",
     "HARD PRA CARAMBA!",
-    "HARD QUE NÃO!",
-    "HARD QUE SIM, GALERA!"
+    "HARD QUE SIM, GALERA!",
+    "HARD QUE SIM, MANO!",
+    "HARD QUE SIM, PESSOAL!"
   ];
   
-  const randomPhrase = hardPhrases[Math.floor(Math.random() * hardPhrases.length)];
+  const softPhrases = [
+    "SOFT QUE SIM!",
+    "SOFT QUE SIM, AMIGO!",
+    "SOFT DEMAIS!",
+    "SOFT PRA CARAMBA!",
+    "SOFT QUE SIM, GALERA!",
+    "SOFT QUE SIM, MANO!",
+    "SOFT QUE SIM, PESSOAL!"
+  ];
+  
+  const negativePhrases = [
+    "HARD QUE NÃO!",
+    "SOFT QUE NÃO!",
+    "HARD QUE NÃO, AMIGO!",
+    "SOFT QUE NÃO, AMIGO!"
+  ];
+  
+  // Randomly choose between hard and soft phrases
+  const allPhrases = [...hardPhrases, ...softPhrases];
+  const randomPhrase = allPhrases[Math.floor(Math.random() * allPhrases.length)];
   speakText(randomPhrase, 0.9, 1.3);
 };
