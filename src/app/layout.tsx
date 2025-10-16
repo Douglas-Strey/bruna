@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "HARD",
-  description: "Celebre a frase icônica da Bruna! Site interativo com botão HARD e gerador de frases.",
+  description: "Hard mano! acessa ai pra testar hard isso aqui!",
 };
 
 export default function RootLayout({
