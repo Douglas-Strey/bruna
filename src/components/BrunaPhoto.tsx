@@ -15,9 +15,9 @@ export default function BrunaPhoto({
   size = 'medium' 
 }: BrunaPhotoProps) {
   const sizeClasses = {
-    small: 'w-32 h-32',
-    medium: 'w-48 h-48',
-    large: 'w-64 h-64'
+    small: 'w-24 h-24 sm:w-32 sm:h-32',
+    medium: 'w-32 h-32 sm:w-40 md:w-48 sm:h-40 md:h-48',
+    large: 'w-48 h-48 sm:w-56 md:w-64 sm:h-56 md:h-64'
   };
 
   const animations = {

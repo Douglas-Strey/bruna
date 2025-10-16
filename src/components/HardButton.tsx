@@ -52,7 +52,7 @@ export default function HardButton() {
     <div className="flex flex-col items-center space-y-8">
       <motion.button
         onClick={handleClick}
-        className="relative px-16 py-8 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-4xl font-bold rounded-full shadow-2xl hover:shadow-pink-500/25 transition-all duration-300 transform hover:scale-105 active:scale-95"
+        className="relative px-8 sm:px-12 md:px-16 py-4 sm:py-6 md:py-8 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-2xl sm:text-3xl md:text-4xl font-bold rounded-full shadow-2xl hover:shadow-pink-500/25 transition-all duration-300 transform hover:scale-105 active:scale-95"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         animate={{

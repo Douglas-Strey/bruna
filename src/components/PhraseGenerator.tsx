@@ -65,9 +65,9 @@ export default function PhraseGenerator() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-6">
+    <div className="w-full max-w-md mx-auto space-y-4 sm:space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
           Gerador de Frases HARD
         </h2>
         <p className="text-gray-600">
@@ -82,14 +82,14 @@ export default function PhraseGenerator() {
           onChange={(e) => setInputText(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Ex: Quero comer pizza..."
-          className="w-full px-4 py-3 border-2 border-pink-300 rounded-lg focus:border-pink-500 focus:outline-none text-lg text-gray-800 placeholder-gray-500"
+          className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-pink-300 rounded-lg focus:border-pink-500 focus:outline-none text-base sm:text-lg text-gray-800 placeholder-gray-500"
           disabled={isGenerating}
         />
 
         <motion.button
           onClick={generateResponse}
           disabled={!inputText.trim() || isGenerating}
-          className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-purple-600 hover:to-pink-600 transition-all duration-300"
+          className="w-full py-2 sm:py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-purple-600 hover:to-pink-600 transition-all duration-300 text-sm sm:text-base"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

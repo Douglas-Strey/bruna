@@ -14,7 +14,7 @@ export default function Home() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-4"
           >
             É HARD OU NÃO É?
           </motion.h1>
@@ -22,20 +22,20 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
+            className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4"
           >
             Tenta ai! Clique no botão HARD ou teste o gerador de frases.
           </motion.p>
         </div>
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">
           {/* Hard Button Section */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-pink-200"
+            className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl border border-pink-200"
           >
             <div className="text-center mb-6">
               <h2 className="text-3xl font-bold text-gray-800 mb-2">
@@ -53,7 +53,7 @@ export default function Home() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-purple-200"
+            className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl border border-purple-200"
           >
             <PhraseGenerator />
           </motion.div>
@@ -67,7 +67,7 @@ export default function Home() {
           className="text-center mt-16"
         >
           <p className="text-gray-500">
-            Feito com ❤️ para celebrar a Bruna e sua frase icônica!
+            Vai tomando
           </p>
         </motion.div>
       </div>
